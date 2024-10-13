@@ -22,6 +22,7 @@ class UserProfileController extends Controller
             'address' => ['nullable', 'string', 'max:100'],
             'phone' => ['nullable', 'string', 'max:15'],
             'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // Validación de la imagen
         ]);
 
         try {
@@ -32,22 +33,31 @@ class UserProfileController extends Controller
             $user->email = $request->get('email');
             $user->address = $request->get('address');
             $user->phone = $request->get('phone');
-    
+
+            // Subir y actualizar la imagen de perfil si se proporciona
+            if ($request->hasFile('profile_photo')) {
+                // Eliminar la imagen anterior si existe
+                if ($user->profile_photo_path && file_exists(public_path('storage/' . $user->profile_photo_path))) {
+                    unlink(public_path('storage/' . $user->profile_photo_path));
+                }
+
+                // Guardar la nueva imagen
+                $path = $request->file('profile_photo')->store('profile_photos', 'public');
+                $user->profile_photo_path = $path;
+            }
+
             // Actualizar la contraseña si se proporciona
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->get('password'));
             }
-    
+
             $user->save(); // Guardar cambios
-    
-            // Redirigir con mensaje de éxito
-            //return redirect()->route('profile.update')->with('message', 'Perfil actualizado.');
-            return back()->with('message', 'Perfil actualizado.');
-        
+
+            return back()->with('message', 'Perfil actualizado con éxito.');
+
         } catch (\Exception $e) {
-            // Retornar un mensaje de error si algo falla
             return back()->with('error', 'Hubo un error al actualizar el perfil.');
-        }//return back()->with('success', 'Profile successfully updated');
+        }
     }
 
 }

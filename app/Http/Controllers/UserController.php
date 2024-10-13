@@ -85,4 +85,14 @@ class UserController extends Controller
         return redirect()->route('users.edit', $user->id)->with('message', 'Roles actualizados exitosamente.');
     }
 
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return redirect()->back()->with('error', 'Usuario no encontrado');
+        }
+        $user->delete();
+        return redirect()->back()->with('message', 'Usuario eliminado con éxito');
+    }
+
 }

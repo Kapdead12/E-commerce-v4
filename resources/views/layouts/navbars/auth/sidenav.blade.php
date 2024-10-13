@@ -33,46 +33,76 @@
                     <span class="nav-link-text ms-1">Perfil</span>
                 </a>
             </li>
-            @can('gestionar usuarios')    
+
+            @can('gestionar usuarios')  
                 <li class="nav-item mt-3 d-flex align-items-center">
                     <div class="ps-4">
                         <i class="fab fab-login" style="color: #f4645f;"></i>
                     </div>
                     <h6 class="ms-2 text-uppercase text-xs font-weight-bolder opacity-6 mb-0">Administrador</h6>
-                </li>
-                
+                </li>  
+
                 <li class="nav-item">
-                    <a class="nav-link {{ str_contains(request()->url(), 'user-management') == true ? 'active' : '' }}" href="{{ route('users.index') }}">
+                    <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-bullet-list-67 text-dark text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Gestion de Usuarios</span>
                     </a>
+                </li>                
+            @endcan
+
+            @can('gestionar productos')   
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('productos.index') ? 'active' : '' }}" href="{{ route('productos.index') }}">
+                            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="ni ni-bullet-list-67 text-dark text-sm opacity-10"></i>
+                            </div>
+                            <span class="nav-link-text ms-1">Gestion de Productos</span>
+                        </a>
+                    </li>
+            @endcan
+
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Comerciante</h6>
+            </li>
+
+            @can('ver mis productos') 
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('productos.index-Usuario') ? 'active' : '' }}" href="{{ route('productos.index-Usuario') }}">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Mis Productos</span>
+                    </a>
+                </li>
+
+            @endcan
+
+            @can('ver catalogo') 
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('catalogo.index') ? 'active' : '' }}" href="{{ route('catalogo.index') }}">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-folder-17 text-success text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Catalogo</span>
+                    </a>
                 </li>
             @endcan
 
-            @can('gestionar pedidos')  
-                <li class="nav-item mt-3">
-                    <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Comerciante</h6>
-                </li>
+            @can('ver catalogo') 
                 <li class="nav-item">
-                    <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'tables']) }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+                    <a class="nav-link {{ request()->routeIs('carrito.index') ? 'active' : '' }}" href="{{ route('carrito.index') }}">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-folder-17 text-success text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Tables</span>
+                        <span class="nav-link-text ms-1">Ver carrito</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{  str_contains(request()->url(), 'billing') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'billing']) }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Billing</span>
-                    </a>
-                </li>
+            @endcan
+
+            @can('gestionar pedidos') 
+                
                 <li class="nav-item">
                     <a class="nav-link {{ Route::currentRouteName() == 'virtual-reality' ? 'active' : '' }}" href="{{ route('virtual-reality') }}">
                         <div

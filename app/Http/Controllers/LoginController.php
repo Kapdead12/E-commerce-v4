@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Session;
+use App\Models\Producto;
 
 class LoginController extends Controller
 {
@@ -39,6 +41,13 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        $cartCarrito = Session::get('carrito', []);
+
+        foreach ($cartCarrito as $item) {
+            $product = Producto::find($item['product_id']);
+            $product->stock += $item['cantidad'];
+            $product->save(); 
+        }
         Auth::logout();
 
         $request->session()->invalidate();

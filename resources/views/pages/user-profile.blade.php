@@ -7,7 +7,7 @@
             <div class="row gx-4">
                 <div class="col-auto">
                 <div class="avatar avatar-xl position-relative">
-                    <img src="{{ auth()->user()->profile_photo_path }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+                    <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
                 </div>
                 </div>
                 <div class="col-auto my-auto">
@@ -92,6 +92,12 @@
                         </div>
                         <div class="card-body">
                             <p class="text-uppercase text-sm">INFORMACION DE USUARIO</p>
+                            <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="profile_photo" class="form-control-label">Foto de Perfil</label>
+                                        <input class="form-control" type="file" name="profile_photo" id="profile_photo" accept="image/*">
+                                    </div>
+                                </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">

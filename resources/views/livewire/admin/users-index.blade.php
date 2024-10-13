@@ -1,4 +1,15 @@
 <div class="table-responsive p-0">
+    @if (session('message'))
+        <div class="alert alert-success text-white" role="alert" style="background-color: #28a745; border-color: #28a745;">
+            <strong>{{ session('message') }}</strong>
+        </div>
+     @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="mb-4 px-3 py-1">
         <input type="text" class="form-control" placeholder="Buscar..." wire:model="search">
     </div>
@@ -21,7 +32,7 @@
                     <div class="d-flex px-3 py-1">
                         <div>
                             @if($user->profile_photo_path)
-                                <img src="{{ $user->profile_photo_path }}" class="avatar me-3" alt="image">
+                                <img src="{{ asset('storage/' . $user->profile_photo_path) }}" class="avatar me-3" alt="image">
                             @else
                                 <img src="{{ asset('default-avatar.png') }}" class="avatar me-3" alt="default image">
                             @endif
@@ -50,8 +61,19 @@
                 </td>
                 <td class="align-middle text-end">
                     <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                        <a class="text-sm font-weight-bold mb-0 cursor-pointer btn btn-success me-2" href="{{ route('users.edit', $user->id) }}">Editar</a>
-                        <a class="text-sm font-weight-bold mb-0 cursor-pointer btn btn-danger me-2" href="{{ route('users.edit', $user->id) }}" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
+                        <a class="text-sm font-weight-bold mb-0 cursor-pointer btn btn-success me-2" href="{{ route('users.edit', $user->id) }}">Editar Rol</a>
+                        <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: none;">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                            <a class="text-sm font-weight-bold mb-0 cursor-pointer btn btn-danger me-2" 
+                            href="#" 
+                            onclick="event.preventDefault(); 
+                                        if(confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                                            document.getElementById('delete-form-{{ $user->id }}').submit();
+                                        }">
+                                Eliminar
+                            </a>
                         @can('gestionar permisos') 
                             <a class="text-sm font-weight-bold mb-0 cursor-pointer btn" style="background-color: yellow; color: black;" href="{{ route('users.permisos', $user->id) }}">Permisos</a>
                         @endcan

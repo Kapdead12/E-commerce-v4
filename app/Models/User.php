@@ -62,4 +62,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function carritos()
+    {
+        return $this->hasMany(Carrito::class);
+    }
 }

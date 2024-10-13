@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegistered;
 
 class RegisterController extends Controller
 {
@@ -25,6 +27,8 @@ class RegisterController extends Controller
             'terms' => 'required'
         ]);
 
+        $plainPassword = $attributes['password'];
+
         // Crea el usuario con los atributos validados
         $user = User::create([
             'name' => $attributes['name'],
@@ -37,6 +41,9 @@ class RegisterController extends Controller
 
         // Asigna el rol de comerciante al usuario creado
         $user->assignRole('comerciante');
+
+        // Enviar el correo al usuario registrado
+        Mail::to($user->email)->send(new UserRegistered($user, $plainPassword));
 
         // Inicia sesión automáticamente al registrar el usuario
         auth()->login($user);
