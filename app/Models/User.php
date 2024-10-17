@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
 use Spatie\Permission\Traits\HasRoles;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
@@ -19,6 +20,7 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRoles;
+    use Billable;
 /**
      * The attributes that are mass assignable.
      *
@@ -31,6 +33,8 @@ class User extends Authenticatable
         'phone',      // Nuevo campo agregado
         'email',
         'password',
+        'pm_type',
+        'pm_last_four',
     ];
 
     /**
@@ -66,5 +70,10 @@ class User extends Authenticatable
     public function carritos()
     {
         return $this->hasMany(Carrito::class);
+    }
+
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class);
     }
 }

@@ -39,6 +39,9 @@ class RegisterController extends Controller
             'password' => Hash::make($attributes['password']), // Asegúrate de encriptar la contraseña
         ]);
 
+        // Crear el cliente de Stripe
+        $stripeCustomer = $user->createAsStripeCustomer();
+
         // Asigna el rol de comerciante al usuario creado
         $user->assignRole('comerciante');
 

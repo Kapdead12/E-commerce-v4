@@ -72,9 +72,23 @@
                             </span>
                         </div>
                         <div class="text-center py-1">
-                            <span class="text-xl font-bold text-dark p-1 ms-1">
-                                Bs {{ $product->price }}
-                            </span>
+                            @if($product->promociones->isNotEmpty())
+                                <h6 class="mb-0 text-sm">
+                                    <span class="line-through">$ {{ number_format($product->price, 2) }}</span> 
+                                    @foreach($product->promociones as $promocion)
+                                        <span style="font-size: 0.9em; color: red;">{{ $promocion->desc_porcentaje }}%</span>
+                                    @endforeach
+                                </h6>
+                                @php
+                                    $discountedPrice = $product->price;
+                                    foreach ($product->promociones as $promotion) {
+                                        $discountedPrice -= ($product->price * ($promotion->desc_porcentaje / 100));
+                                    }
+                                @endphp
+                                <h6 class="mb-0 text-sm">$ {{ number_format($discountedPrice, 2) }}</h6>
+                            @else
+                                <h6 class="mb-0 text-sm">$ {{ number_format($product->price, 2) }}</h6>
+                            @endif
                         </div>
 
                        <!-- Campo de cantidad -->
@@ -151,7 +165,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function add(productId, cantidad) {
+    function add(productId, cantidad, discountedPrice) {
         fetch(`/carrito/add/${productId}`, {
             method: 'POST',
             headers: {
@@ -159,7 +173,7 @@
                 'Accept': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-            body: JSON.stringify({ cantidad: cantidad })
+            body: JSON.stringify({ cantidad: cantidad, price: discountedPrice }) // Enviar precio con descuento
         })
         .then(response => {
             if (!response.ok) {

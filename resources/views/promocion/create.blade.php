@@ -34,7 +34,7 @@
                     <label for="product_id" class="block mb-2 text-sm text-gray-600 dark:text-gray-400">Seleccionar Producto</label>
                     <select name="product_id" id="product_id" required class="form-control px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500">
                         @foreach($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            <option value="{{ $product->id }}" >{{ $product->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="mb-2 mt-3">
-                    <button type="submit" class="w-full px-2 py-2 text-white bg-black rounded-md focus:bg-gray-700 focus:outline-none">Agregar Promoción</button>
+                    <button type="submit" class="w-full px-2 py-2 text-white bg-warning rounded-md focus:bg-gray-700 focus:outline-none">Agregar Promoción</button>
                 </div>
             </form>
         </div>

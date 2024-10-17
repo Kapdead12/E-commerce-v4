@@ -20,8 +20,11 @@ class CarritoController extends Controller
 
     public function index()
     {
-        $carritos = Session::get('carrito', []);
-        return view('carrito.index', compact('carritos'));
+        $products = Session::get('carrito', []);
+
+        //\Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        //$skus = \Stripe\SKU::all();
+        return view('carrito.index', compact('products'));
     }
 
     public function addCarrito(Request $request, $productId)
@@ -40,6 +43,15 @@ class CarritoController extends Controller
             return response()->json(['error' => 'Cantidad excede el stock disponible.'], 400);
         }
 
+        // Calcular el precio con descuento, si aplica
+        $discountedPrice = $product->price; // Precio original
+
+        if ($product->promociones->isNotEmpty()) {
+            foreach ($product->promociones as $promotion) {
+                $discountedPrice -= ($discountedPrice * ($promotion->desc_porcentaje / 100));
+            }
+        }
+
         // Actualizar el stock del producto
         $product->stock -= $cantidad;
         $product->save();
@@ -55,7 +67,7 @@ class CarritoController extends Controller
             // Agregar nuevo producto al carrito
             $cartCarrito[$productId] = [
                 'name' => $product->name,
-                'price' => $product->price,
+                'price' => number_format($discountedPrice, 2), // Agregar precio con descuento
                 'cantidad' => $cantidad,
                 'product_id' => $productId
             ];
@@ -66,9 +78,11 @@ class CarritoController extends Controller
 
         return response()->json([
             'success' => 'Producto agregado al carrito.',
-            'nuevoStock' => $product->stock // Enviar el nuevo stock actualizado
+            'nuevoStock' => $product->stock, // Enviar el nuevo stock actualizado
+            'precioConDescuento' => number_format($discountedPrice, 2) // Enviar el precio con descuento
         ]);
     }
+
 
 
     public function remove(Request $request, $productId)
@@ -109,6 +123,5 @@ class CarritoController extends Controller
 
         return response()->json(['error' => 'Producto no encontrado en el carrito.'], 404);
     }
-
 
 }

@@ -82,13 +82,26 @@
                         </div>
                     </div>
                 </td>
+
                 <td>
                     <div class="d-flex px-0 py-1">
                         <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ $product->price }}</h6>
+                            @if($product->promociones->isNotEmpty())
+                                <h6 class="mb-0 text-sm line-through">$ {{ number_format($product->price, 2) }}</h6>
+                                @php
+                                    $discountedPrice = $product->price;
+                                    foreach ($product->promociones as $promotion) {
+                                        $discountedPrice -= ($product->price * ($promotion->desc_porcentaje / 100));
+                                    }
+                                @endphp
+                                <h6 class="mb-0 text-sm">$ {{ number_format($discountedPrice, 2) }}</h6>
+                            @else
+                                <h6 class="mb-0 text-sm">$ {{ number_format($product->price, 2) }}</h6>
+                            @endif
                         </div>
                     </div>
                 </td>
+
                 <td>
                     <div class="d-flex px-0 py-1">
                         <div class="d-flex flex-column justify-content-center">
@@ -102,6 +115,8 @@
                         </div>
                     </div>
                 </td>
+
+
                 <td>
                     <div class="d-flex px-5 py-1">
                         <div class="d-flex flex-column justify-content-center">

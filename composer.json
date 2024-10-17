@@ -8,12 +8,14 @@
         "php": "^8.0.2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel-frontend-presets/argon": "^2.0",
+        "laravel/cashier": "^14.14",
         "laravel/framework": "^9.19",
         "laravel/jetstream": "^3.0",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.5",
         "livewire/livewire": "^2.11",
+        "mercadopago/dx-php": "^2.6",
         "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {

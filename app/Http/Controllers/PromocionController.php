@@ -8,10 +8,10 @@ use App\Models\Promocion;
 
 class PromocionController extends Controller
 {   
-    public function index()
+    public function mostrar()
     {   
         $promociones = Promocion::all(); 
-        return view('promocion.index', compact('promociones'));
+        return view('promocion.mostrar', compact('promociones'));
     }
     
     public function create()

@@ -7,6 +7,22 @@ use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\ResetPassword;
+use App\Http\Controllers\ChangePassword;   
+use App\Http\Controllers\PermisoController;         
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ProductoCatalogoController;
+use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\ReseñaController;
+use App\Http\Controllers\PromocionController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\EnvioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,20 +78,21 @@ Route::middleware([
 */
     
 });
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\ResetPassword;
-use App\Http\Controllers\ChangePassword;   
-use App\Http\Controllers\PermisoController;         
-use App\Http\Controllers\ProductoController;
-use App\Http\Controllers\ProductoCatalogoController;
-use App\Http\Controllers\CarritoController;
-use App\Http\Controllers\ReseñaController;
-use App\Http\Controllers\PromocionController;
             
+
+//Demas rutas
+Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
+Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
+Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
+Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
+Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
+Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
+//Route::get('/{page}', [PageController::class, 'index'])->name('page');
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+//Para actualizar el perfil
+Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+
 
 Route::get('/', function () {return view('welcome');})->middleware('guest')->name('welcome');
 Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
@@ -117,6 +134,41 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/Mis-productos', [ProductoController::class, 'indexPorUsuario'])
     ->name('productos.index-Usuario')
     ->middleware('permission:ver mis productos');
+
+
+    //Para crear los pedidos
+    Route::get('/pedidos', [PedidoController::class, 'mostrarPedidos'])
+        ->name('pedidos.index');
+
+    Route::post('/crear/pedido', [PedidoController::class, 'crearPedido_Envio'])
+        ->name('pedidos.crear');
+
+    Route::get('/pedidos', [PedidoController::class, 'mostrarPedidos'])
+        ->name('pedidos.index');
+
+    Route::delete('/pedidos/{id}', [PedidoController::class, 'destroy'])
+        ->name('pedidos.eliminar');
+
+
+    //Para crear los envios
+    Route::get('/envios', [EnvioController::class, 'mostrarEnvios'])
+        ->name('envios.index');
+
+    Route::post('/envios/asignar/{id}', [EnvioController::class, 'asignarEnvio'])
+        ->name('envios.asignar');
+
+    Route::get('/Mis-envios', [EnvioController::class, 'misEnvios'])
+        ->name('envios.misEnvios');
+
+    Route::post('/envios/confirmar/{id}', [EnvioController::class, 'confirmarEnvio'])
+        ->name('envios.confirmar');
+    
+    Route::delete('/envios/{id}', [EnvioController::class, 'destroy'])
+        ->name('envios.eliminar');
+
+
+
+
 
     // Para registrar mis productos
     Route::post('/Mis-productos/store', [ProductoController::class, 'store'])
@@ -187,31 +239,24 @@ Route::group(['middleware' => 'auth'], function () {
     ->middleware('permission:gestionar productos|gestionar reseñas de productos');
 
     //Para las promociones
-    Route::get('/promociones', [PromocionController::class, 'index'])
-    ->name('promociones.index')
-    ->middleware('permission:gestionar productos');
+    Route::middleware('permission:gestionar productos')->group(function () {
+        Route::get('/promociones/mostrar', [PromocionController::class, 'mostrar'])
+            ->name('promociones.mostrar');
+    
+        Route::get('/promociones/create', [PromocionController::class, 'create'])
+            ->name('promociones.create');
+    
+        Route::post('/promociones', [PromocionController::class, 'store'])
+            ->name('promociones.store');
+    });
 
-    Route::get('/promociones/create', [PromocionController::class, 'create'])
-    ->name('promociones.create')
-    ->middleware('permission:gestionar productos');
+    //Para pagos por Stripe
+    Route::post('/checkout', [CheckoutController::class, 'processPayment'])
+    ->name('checkout');
 
-    Route::post('/promociones/store', [PromocionController::class, 'store'])
-    ->name('promociones.store')
-    ->middleware('permission:gestionar productos');
+    //Route::post('/guardar-metodo-pago', [CheckoutController::class, 'guardarMetodoPago']);
 
 
-    //Demas rutas
-	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
-	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
-	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
-    Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
-	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
-	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
-	Route::get('/{page}', [PageController::class, 'index'])->name('page');
-	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
-    //Para actualizar el perfil
-	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 
     //Para crear y editar roles
     Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create')

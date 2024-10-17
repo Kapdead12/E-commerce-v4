@@ -94,9 +94,20 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('carrito.index') ? 'active' : '' }}" href="{{ route('carrito.index') }}">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-folder-17 text-success text-sm opacity-10"></i>
+                            <i class="fas fa-shopping-cart text-success text-sm opacity-10"></i> <!-- Cambiado a ícono de carrito -->
                         </div>
-                        <span class="nav-link-text ms-1">Ver carrito</span>
+                        <span class="nav-link-text ms-1">Ver carrito</span> 
+                    </a>
+                </li>
+            @endcan
+
+            @can('ver catalogo') 
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('pedidos.index') ? 'active' : '' }}" href="{{ route('pedidos.index') }}">
+                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-list-alt text-success text-sm opacity-10"></i> <!-- Ícono de lista -->
+                        </div>
+                        <span class="nav-link-text ms-1">Ver Pedidos</span>
                     </a>
                 </li>
             @endcan
@@ -128,30 +139,22 @@
                     <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Delivery</h6>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::currentRouteName() == 'profile-static' ? 'active' : '' }}" href="{{ route('profile-static') }}">
+                <a class="nav-link {{ request()->routeIs('envios.index') ? 'active' : '' }}" href="{{ route('envios.index') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Pedidos Disponibles</span>
+                        <span class="nav-link-text ms-1">Envios disponibles</span>
                     </a>
                 </li>
+                
                 <li class="nav-item">
-                    <a class="nav-link " href="{{ route('sign-in-static') }}">
+                <a class="nav-link {{ request()->routeIs('envios.misEnvios') ? 'active' : '' }}" href="{{ route('envios.misEnvios') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
+                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Login</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="{{ route('sign-up-static') }}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-collection text-info text-sm opacity-10"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Sign Up</span>
+                        <span class="nav-link-text ms-1">Mis Envios</span>
                     </a>
                 </li>
             @endcan

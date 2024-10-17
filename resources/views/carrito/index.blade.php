@@ -35,7 +35,7 @@
                     <div class="table-responsive p-0">
 
                         <div class="card-body px-0 pt-0 pb-0">
-                            @if (empty($carritos))
+                            @if (empty($products))
                                 <div class="card-header pb-0">
                                     <p>No tienes productos en tu carrito.</p>
                                 </div>
@@ -43,6 +43,7 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Producto</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cantidad</th>
@@ -52,8 +53,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($carritos as $productId => $product)
+                                        @foreach ($products as $productId => $product)
                                             <tr>
+                                                <td>
+                                                    <div class="d-flex px-3 py-0">
+                                                        <div>
+                                                            <h6 class="mb-0 text-sm">{{ $product['product_id'] }}</h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <div class="d-flex px-3 py-0">
                                                         <div>
@@ -65,7 +73,7 @@
                                                 <td>
                                                     <div class="d-flex px-1 py-0">
                                                         <div class="d-flex flex-column justify-content-center">
-                                                            <p class="text-sm font-weight-bold mb-0">Bs {{ $product['price'] }}</p>
+                                                            <p class="text-sm font-weight-bold mb-0">$ {{ $product['price'] }}</p>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -81,7 +89,7 @@
                                                 <td>
                                                     <div class="d-flex px-3 py-0">
                                                         <div class="d-flex flex-column justify-content-center">
-                                                            <p class="text-sm font-weight-bold mb-0">Bs {{ $product['price'] * $product['cantidad'] }}</p>
+                                                            <p class="text-sm font-weight-bold mb-0">$ {{ $product['price'] * $product['cantidad'] }}</p>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -116,14 +124,18 @@
                                 <div class="card-header pb-0">
                                     @php
                                         $total = 0;
-                                        foreach ($carritos as $product) {
+                                        foreach ($products as $product) {
                                             $total += $product['price'] * $product['cantidad'];
                                         }
                                     @endphp
-                                    <h5>Total: Bs {{ $total }}</h5>
+                                    <h5>Total: $ {{ $total }}</h5>
                                 </div>
                                 <div class="d-flex px-3 py-2">
-                                    <button class="btn btn-success" onclick="comprar()">Comprar</button>
+                                    <form id="checkout-form" action="{{ route('checkout') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="total" value="{{ $total }}">
+                                        <button type="submit" class="btn btn-success">Comprar</button>
+                                    </form>
                                 </div>
                             @endif
                         </div>

@@ -39,4 +39,13 @@ class Producto extends Model
     {
         return $this->hasMany(Promocion::class,'product_id');
     }
+
+    public function pedidos()
+    {
+        return $this->belongsToMany(Pedido::class, 'pedido_productos')
+                    ->withPivot('cantidad') // Si necesitas la cantidad
+                    ->withTimestamps();
+    }
+
+
 }
